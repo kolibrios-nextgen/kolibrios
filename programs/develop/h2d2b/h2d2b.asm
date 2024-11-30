@@ -25,6 +25,7 @@ include 'box_lib.mac'
 include 'lang.inc'
 
 EVENT_MASK = EVM_REDRAW + EVM_KEY + EVM_BUTTON + EVM_MOUSE + EVM_MOUSE_FILTER
+UPPERCASE_MASK = 11011111b
 
 @use_library
 
@@ -96,7 +97,7 @@ next_digit:
 @@:
     cmp     dl, 'F'
     jbe     @f
-    and     dl, 11011111b
+    and     dl, UPPERCASE_MASK
 @@:
     sub     dl, '0'
     cmp     dl, 9
@@ -167,26 +168,26 @@ draw_window:
     or      edx, [sys_colors.work]
 ;mov    esi, 0x80000000
 ;or    esi, [sys_colors.grab_text]
-    mcall   SF_CREATE_WINDOW, 200*65536+WIN_W, 200*65536+179, , , title
+    mcall   SF_CREATE_WINDOW, <200, WIN_W>, <200, 179>, , , title
 
 
-    mcall   SF_DEFINE_BUTTON, 15*65536+42, 106*65536 + 21, 2, [sys_colors.work_button] ; shl button
-    mcall   , 70*65536+42, , , ; sal button
+    mcall   SF_DEFINE_BUTTON, <15, 42>, <106, 21>, 2, [sys_colors.work_button] ; shl button
+    mcall   , <70, 42>, , , ; sal button
     mcall   , (WIN_W-55)*65536+42, , 3, ; shr button
     mcall   , (WIN_W-111)*65536+42, , 4, ; sar button
-    mcall   , (WIN_W-72)*65536+58, 145*65536+ 21, 5, ; OK button
+    mcall   , (WIN_W-72)*65536+58, <145, 21>, 5, ; OK button
 
     mov     ecx, 0x90000000
     or      ecx, [sys_colors.work_text]
-    mcall   SF_DRAW_TEXT, 15*65536+30, , binstr, 
-    mcall   , 15*65536+46, , decstr, 
-    mcall   , 15*65536+62, , sdecstr, 
-    mcall   , 15*65536+78, , hexstr, 
-    mcall   , 15*65536+150, , numstr, 
+    mcall   SF_DRAW_TEXT, <15, 30>, , binstr, 
+    mcall   , <15, 46>, , decstr, 
+    mcall   , <15, 62>, , sdecstr, 
+    mcall   , <15, 78>, , hexstr, 
+    mcall   , <15, 150>, , numstr, 
 
     mov     ecx, 0x90000000
     or      ecx, [sys_colors.work_button_text]
-    mcall   , 23*65536+109, , shl_sal_sar_shr_button_caption
+    mcall   , <23, 109>, , shl_sal_sar_shr_button_caption
     mcall   , (WIN_W-59)*65536+149, , Okstr, 
     mov     ecx, [num]
 
@@ -230,7 +231,7 @@ get_base:
     mov     al, [edi]
     cmp     al, 'H'
     jbe     @f
-    and     al, 11011111b
+    and     al, UPPERCASE_MASK
 @@:
     cmp     al, 'H'
     jne     @f
